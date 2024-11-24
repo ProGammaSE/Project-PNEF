@@ -1,0 +1,16 @@
+Data featuring in the dataset
+
+# 1st column
+Average packet loss over the time
+
+# 2d column
+Device uptime since the last maintenance in seconds
+
+# 3rd column
+CPU or memory usage
+
+# 4th column
+Number of smaller issues occurred since the last maintenance
+
+# 5th column
+Failure or no failure
