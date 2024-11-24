@@ -32,7 +32,7 @@ def train_model():
     try:
         # Load dataset (csv file)
         print("attempting to read the CSV file data (dataset)")
-        csv_data = pd.read_csv("PNEF_Dataset.csv", header=None, names=column_names)
+        csv_data = pd.read_csv("sample_dataset.csv", header=None, names=column_names)
         print("CSV reading successful")
 
         # Split dataset
@@ -79,7 +79,7 @@ def train_model():
 
 
 # predict network failures
-@app.route('/pnef/predict', methods=['POST'])
+@app.route('/pnef/predict/failure', methods=['POST'])
 def predict_failure():
     print("--- predict_failure function is calling ---")
 
@@ -88,10 +88,10 @@ def predict_failure():
         naive_joblib = joblib.load('PNEF_Trained_model.pkl')
 
         # Get input values
-        packets = int(request.json['packets'])
-        uptime = int(request.json['uptime'])
-        memory = int(request.json['memory'])
-        issues = int(request.json['issues'])
+        packets = float(request.json['packets'])
+        uptime = float(request.json['uptime'])
+        memory = float(request.json['memory'])
+        issues = float(request.json['issues'])
 
         # Creating an array using given inputs
         input_array = [packets, uptime, memory, issues]
@@ -106,7 +106,7 @@ def predict_failure():
         obj = {
             "status": 200,
             "description": "Network equipment failure predicted successfully",
-            "prediction": prediction
+            "prediction": int(prediction)
         }
         print(obj)
 
