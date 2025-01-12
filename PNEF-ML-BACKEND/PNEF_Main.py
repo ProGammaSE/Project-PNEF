@@ -21,7 +21,7 @@ cors = CORS(app, resources={
 })
 
 
-# train the model to predict network equipment failures
+# Function to train the model to predict network equipment failures
 @app.route('/pnef/train/model', methods=['POST'])
 def train_model():
     print("***** train_model function is starting *****")
@@ -32,17 +32,17 @@ def train_model():
     try:
         # Load dataset (csv file)
         print("attempting to read the CSV file data (dataset)")
-        csv_data = pd.read_csv("sample_dataset.csv", header=None, names=column_names)
+        csv_data = pd.read_csv("PNEF_dataset_2.csv", header=None, names=column_names)
         print("CSV reading successful")
 
         # Split dataset
         print("Fitting data into the Naive Bayes model")
         feature_columns = ['packets', 'uptime', 'memory', 'issues']
-        X = csv_data[feature_columns]
-        Y = csv_data['status']
+        x = csv_data[feature_columns]
+        y = csv_data['status']
 
         # # 70% training and 30% test
-        x_train, x_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=1)
+        x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=1)
 
         # # Fit the training datasets into the algorithm
         naive = naive_bayes.MultinomialNB()
@@ -78,7 +78,7 @@ def train_model():
     return obj
 
 
-# predict network failures
+# Function to predict network failures by passing Packet loss, Uptime, Memory usage and smaller issues occured
 @app.route('/pnef/predict/failure', methods=['POST'])
 def predict_failure():
     print("--- predict_failure function is calling ---")
@@ -104,21 +104,35 @@ def predict_failure():
 
         # Creating an object using prediction
         obj = {
-            "status": 200,
-            "description": "Network equipment failure predicted successfully",
-            "prediction": int(prediction)
+            "response": 200,
+            "message": "Network equipment failure predicted successfully",
+            "data": {
+                "prediction": int(prediction),
+                "text": get_prediction_text(int(prediction))
+            }
         }
         print(obj)
 
     except Exception as e:
         obj = {
-            "status": 400,
-            "description": "Network equipment failure predicting failed!",
-            "prediction": ""
+            "response": 400,
+            "message": "Prediction failed",
+            "data": {
+                "prediction": 0,
+                "text": ""
+            }
         }
         print(e)
         abort(400)
     return obj
+
+
+# Function to get the text of "Failure" or "No Failure" by passing the prediction ID
+def get_prediction_text(prediction_id):
+    if prediction_id == 1:
+        return "Failure"
+    else:
+        return "No Failure"
 
 
 app.run(port=5002, debug=True)

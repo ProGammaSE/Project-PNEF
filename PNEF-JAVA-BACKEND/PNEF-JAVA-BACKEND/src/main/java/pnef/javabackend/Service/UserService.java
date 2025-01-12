@@ -66,6 +66,7 @@ public class UserService {
         if (user.getUserUsername().isEmpty() || user.getUserPassword().isEmpty()) {
             generalResponse.setResponse(400);
             generalResponse.setMessage("Username or password is empty");
+            System.out.println("Username or password is empty");
         }
         else {
             try {
@@ -76,6 +77,7 @@ public class UserService {
                     // user not found in the database
                     generalResponse.setResponse(400);
                     generalResponse.setMessage("Username is incorrect");
+                    System.out.println("Username is incorrect");
                 }
                 else {
                     // checking the password
@@ -83,15 +85,18 @@ public class UserService {
                         generalResponse.setResponse(200);
                         generalResponse.setMessage("User logged in successfully");
                         generalResponse.setData(dbUser);
+                        System.out.println("User logged in successfully");
                     }
                     else {
                         generalResponse.setResponse(400);
                         generalResponse.setMessage("Password is incorrect");
+                        System.out.println("Password is incorrect");
                     }
                 }
             } catch (Exception ex) {
                 generalResponse.setResponse(400);
                 generalResponse.setMessage("Something went wrong!");
+                System.out.println("Something went wrong!");
                 System.out.println(ex.getMessage());
             }
         }

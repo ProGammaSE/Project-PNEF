@@ -13,4 +13,4 @@ CPU or memory usage
 Number of smaller issues occurred since the last maintenance
 
 # 5th column
-Failure or no failure
+Failure=1 or no failure=0
