@@ -27,7 +27,9 @@ export class HomePageComponent {
   issueCountValue: number = 0;
   prediction: Prediction = new Prediction;
   generalResponse: GeneralResponse = new GeneralResponse;
+  predictionResult: any = []
   resultBox: boolean = false;
+  resultboxColor: string = "alert alert-success";
 
   constructor(private predictionService: PredictionService) {}
 
@@ -40,6 +42,7 @@ export class HomePageComponent {
     this.cpuUsageValue = "0 %";
     this.issueCountValue = 0;
     this.loadingBox = true;
+    this.resultBox = false;
 
     setTimeout(() => {
       this.loadingBox = false;
@@ -74,6 +77,7 @@ export class HomePageComponent {
 
   // Function to send the values to the Machine Learning backend and get the prediction
   getPrediction() {
+    this.resultBox = false;
     this.loadingBox = true;
     this.prediction = new Prediction
     this.prediction.packets = this.packetValue
@@ -93,7 +97,7 @@ export class HomePageComponent {
 
         setTimeout(() => {
           this.alertStatus = false
-        }, 5000)
+        }, 2000)
 
         return err
       })
@@ -101,19 +105,29 @@ export class HomePageComponent {
     // Get and handle Machine Learning backend responses
     ).subscribe((result: any) => {
       this.generalResponse = result;
+      this.predictionResult = this.generalResponse.data
       console.log(this.generalResponse)
 
       if (this.generalResponse.response = 200) {
-        this.resultBox = true
-        this.loadingBox = false
         this.alertStatus = true
         this.alertClass = "alert alert-success"
         this.alertText = this.generalResponse.message
         console.log(this.generalResponse.data)
 
         setTimeout(() => {
+          // If the result is a NOT-FAILURE then result box color change to GREEN
+          // If the result is a FAILURE then result box color change to RED
+          console.log(this.predictionResult)
+          if (this.predictionResult[1].text == "Failure") {
+            this.resultboxColor = "alert alert-danger"
+          }
+          else {
+            this.resultboxColor = "alert alert-success"
+          }
           this.alertStatus = false
-        }, 5000)
+          this.loadingBox = false
+          this.resultBox = true
+        }, 2000)
       }
       else {
         this.loadingBox = false
@@ -123,8 +137,17 @@ export class HomePageComponent {
 
         setTimeout(() => {
           this.alertStatus = false
-        }, 5000)
+        }, 2000)
       }
     })
+  }
+
+  //
+  resetFields() {
+    this.packetValue = 0
+    this.uptimeValue = "0";
+    this.cpuUsageValue = "0";
+    this.issueCountValue = 0;
+    this.resultBox = false
   }
 }

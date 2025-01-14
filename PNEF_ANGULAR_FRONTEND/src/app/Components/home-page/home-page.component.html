@@ -43,11 +43,16 @@
             </div>
 
             <div *ngIf="this.resultBox" style="text-align: left;">
-              <ul style="list-style-type:square;">
-                <li>Prediction ID: 1</li>
-                <li>Description: FAILURE</li>
-                <li>Accuracy: 66%</li>
+
+              &nbsp;
+              <div [ngClass]="this.resultboxColor" role="alert">
+                <h5>PREDICTION RESULTS</h5>
+                <ul style="list-style-type: square;">
+                  <li>Prediction ID: {{ predictionResult[0].prediction }}</li>
+                  <li>Description: {{ predictionResult[1].text }}</li>
+                  <li>Accuracy: {{ predictionResult[2].accuracy }}</li>
               </ul>
+              </div>
             </div>
 
             <div style="margin: 2%;">
@@ -56,6 +61,13 @@
                     &nbsp;
                     <i class="bi bi-arrow-repeat"></i>
                 </button>
+
+                &nbsp;
+                <button type="submit" class="btn btn-warning" (click)="resetFields()">
+                    Reset
+                    &nbsp;
+                    <i class="bi bi-x-circle"></i>
+                </button>
                 
                 &nbsp;
                 <button type="submit" class="btn btn-success" (click)="getPrediction()">
@@ -63,6 +75,7 @@
                     &nbsp;
                     <i class="bi bi-arrow-right-circle"></i>
                 </button>
+
             </div>
           </div>
         </div>

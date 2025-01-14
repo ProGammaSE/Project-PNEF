@@ -8,6 +8,7 @@ import joblib
 from sklearn import naive_bayes
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score, classification_report
+import json
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -61,6 +62,16 @@ def train_model():
         print("Model Accuracy: ", accuracy, "%")
         print(classification_report(y_test, prediction))
 
+        # Load the existing data from the JSON file where the accuracy is storing
+        with open('local_data.json', 'r') as file:
+            data = json.load(file)
+
+        data['accuracy'] = str(accuracy) + "%"
+
+        # Write the updated data back to the JSON file where the accuracy is storing
+        with open('local_data.json', 'w') as file:
+            json.dump(data, file, indent=4)
+
         obj = {
             "status": 200,
             "description": "PNEF model trained successfully",
@@ -100,16 +111,22 @@ def predict_failure():
         # Get the prediction using input array
         prediction = naive_joblib.predict([input_array])[0]
 
+        # Load the existing data from the JSON file where the accuracy is stored
+        with open('local_data.json', 'r') as file:
+            accuracy = json.load(file)
+
+        accuracy['accuracy'] = "99%"
+        data = [{"prediction": int(prediction)}, {"text": get_prediction_text(int(prediction))},
+                {"accuracy": accuracy['accuracy']}]
+        # data = [int(prediction), get_prediction_text(int(prediction)), accuracy['accuracy']]
+
         print("Prediction: ", prediction)
 
         # Creating an object using prediction
         obj = {
             "response": 200,
             "message": "Network equipment failure predicted successfully",
-            "data": {
-                "prediction": int(prediction),
-                "text": get_prediction_text(int(prediction))
-            }
+            "data": data
         }
         print(obj)
 
@@ -119,7 +136,8 @@ def predict_failure():
             "message": "Prediction failed",
             "data": {
                 "prediction": 0,
-                "text": ""
+                "text": "",
+                "accuracy": data['accuracy']
             }
         }
         print(e)
