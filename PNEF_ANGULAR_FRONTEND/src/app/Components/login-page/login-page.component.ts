@@ -33,7 +33,7 @@ export class LoginPageComponent {
     this.loadingBox = true;
     if (this.login.userUsername == "" || this.login.userPassword == "") {
 
-      // Showing an error message for 5 seconds
+      // Showing an error message for 3 seconds
       this.loadingBox = false;
       this.alertStatus = true
       this.alertClass = "alert alert-danger"
@@ -42,14 +42,7 @@ export class LoginPageComponent {
       setTimeout(() => {
         this.alertStatus = false
         this.loadingBox = false;
-
-        // saving the user if in browser local memory
-        // console.log("user id : " + result['user']['userId'])
-        // localStorage.setItem('userId', result['user']['userId']);
-
-        // navigate to the next page
-        // this.router.navigate(['/navigation/template'])
-      }, 5000);
+      }, 3000);
 
     }
     else {
@@ -116,7 +109,7 @@ export class LoginPageComponent {
   // Then navigates to the "register" page
   clickOnNotAMember() {
     // Navigate to the next page
-    this.router.navigate(['/login'])
+    this.router.navigate(['/register'])
   }
 
 }

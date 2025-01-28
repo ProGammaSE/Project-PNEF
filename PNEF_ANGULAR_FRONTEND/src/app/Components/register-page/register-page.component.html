@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="row">
+      <div class="col">
+  
+      </div>
+      <div class="col-4">
+  
+        &nbsp;
+        <div *ngIf="this.loadingBox" style="text-align: center">
+          <button class="btn btn-primary" type="button" disabled>
+            <span class="spinner-grow spinner-grow-sm" aria-hidden="true"></span>
+            &nbsp;
+            <span role="status">Loading...</span>
+          </button>
+        </div>
+  
+        <div class="card" style="margin-top: 5%">
+  
+          <div *ngIf="this.alertStatus" [ngClass]="this.alertClass" style="margin: 2%;" role="alert">
+            {{this.alertText}}
+          </div>
+  
+          <div class="card-body">
+            <form class="row g-3">
+              <legend style="color: rgb(0, 71, 204);"><b>Register</b></legend>
+  
+              <div class="col-md-12">
+                <label for="emailAddress" class="form-label">Full Name</label>
+                <input type="email" class="form-control" id="emailAddress" name="fullName" [(ngModel)]="this.register.fullName">
+              </div>
+
+              <div class="col-md-12">
+                <label for="emailAddress" class="form-label">Username</label>
+                <input type="email" class="form-control" id="emailAddress" name="emailAddress" [(ngModel)]="this.register.userUsername">
+              </div>
+  
+              <div class="col-6">
+                <label for="userPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="userPassword" name="userPassword" [(ngModel)]="this.register.userPassword">
+              </div>
+
+              <div class="col-6">
+                <label for="userPassword" class="form-label">Password</label>
+                <input type="password" class="form-control" id="userPassword" name="userPassword" [(ngModel)]="this.confirmPassword">
+              </div>
+  
+              <div class="col-12">
+                <button type="submit" class="btn btn-primary" (click)="registerUser()">Register</button>
+                &nbsp;
+                <span type="submit" class="btn-primary" (click)="alreadyRegistered()">Already registered ?</span>
+              </div>
+            </form>
+          </div>
+        </div>
+  
+      </div>
+  
+      <div class="col">
+  
+      </div>
+    </div>
+  </div>
+  
+  
+  
+  

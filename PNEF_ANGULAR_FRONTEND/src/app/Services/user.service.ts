@@ -20,4 +20,9 @@ export class UserService {
   loginUser(login: Users) {
     return this.http.post(this.BASE_URL + '/user/login', login);
   }
+
+  // Function to update user details
+  editUser(user: Users) {
+    return this.http.put(this.BASE_URL + '/user/edit', user);
+  }
 }

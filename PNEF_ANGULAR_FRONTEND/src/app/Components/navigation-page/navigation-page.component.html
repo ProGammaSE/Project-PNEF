@@ -7,20 +7,14 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item" >
-            <a class="nav-link active" aria-current="page" href="/navigation/template" style="color: blue">HOME</a>
-          </li>
-          <li class="nav-item" >
-            <a class="nav-link active" aria-current="page" href="/navigation/linkedin" style="color: blue">HISTORY</a>
+            <a class="nav-link active" aria-current="page" href="/navigation/home" style="color: blue">HOME</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/navigation/test" style="color: blue">PROFILE</a>
-          </li>
-          <li class="nav-item" *ngIf="this.isAdmin">
-            <a class="nav-link active" aria-current="page" href="/navigation/test" style="color: blue">ADMIN</a>
+            <a class="nav-link active" aria-current="page" href="/navigation/profile" style="color: blue">PROFILE</a>
           </li>
         </ul>
         <form class="d-flex" role="search">
-          <a class="nav-link active" aria-current="page" href="/navigation/login" style="color: blue">LOGOUT</a>
+          <a class="nav-link active" aria-current="page" href="/welcome" style="color: blue" (click)="userLogout()">LOGOUT</a>
         </form>
       </div>
     </div>
