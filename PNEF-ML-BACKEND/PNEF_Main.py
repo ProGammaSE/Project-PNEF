@@ -113,11 +113,20 @@ def predict_failure():
 
         # Load the existing data from the JSON file where the accuracy is stored
         with open('local_data.json', 'r') as file:
-            accuracy = json.load(file)
+            accuracy = json.load(file).get('accuracy')
 
-        accuracy['accuracy'] = "99%"
-        data = [{"prediction": int(prediction)}, {"text": get_prediction_text(int(prediction))},
-                {"accuracy": accuracy['accuracy']}]
+        # Call the get_prediction_details function get the prediction text and the suggestion list
+        result = get_prediction_details(input_array, int(prediction))
+        text = result['text']
+        print(text)
+        # suggestions = get_prediction_details.suggestions
+
+        data = [
+            {"prediction": int(prediction)},
+            {"text": result['text']},
+            {"accuracy": accuracy},
+            {"suggestions": result['suggestions']},
+        ]
         # data = [int(prediction), get_prediction_text(int(prediction)), accuracy['accuracy']]
 
         print("Prediction: ", prediction)
@@ -137,7 +146,7 @@ def predict_failure():
             "data": {
                 "prediction": 0,
                 "text": "",
-                "accuracy": data['accuracy']
+                "accuracy": 0
             }
         }
         print(e)
@@ -146,11 +155,72 @@ def predict_failure():
 
 
 # Function to get the text of "Failure" or "No Failure" by passing the prediction ID
-def get_prediction_text(prediction_id):
+# Also, to gather suggestions depending on the failure situation
+def get_prediction_details(input_array, prediction_id):
+    suggestion_array = []
+
     if prediction_id == 1:
-        return "Failure"
+        # If a failure then return suggestions to the user depending on the situation
+        # avg max package los = 5.0
+        # avg max uptime = 500000
+        # avg CPU usage = 75%
+        # avg smaller issues = 5
+
+        if input_array[0] > 5.0:
+            suggestion_array.append("Check for network congestion and optimize traffic routing.")
+            suggestion_array.append("Inspect physical connections (cables, ports) for damage or loose connections.")
+            suggestion_array.append("Update firmware or drivers for network interfaces.")
+            suggestion_array.append("Monitor for signs of hardware degradation (e.g., overheating, high error rates).")
+            suggestion_array.append("Consider replacing the equipment if packet loss persists despite troubleshooting.")
+
+        elif input_array[1] > 500000:
+            suggestion_array.append("Schedule a maintenance window to reboot the device and clear any accumulated "
+                                    "memory leaks or software glitches.")
+            suggestion_array.append("Perform a thorough inspection of hardware components (e.g: fans, power supplies).")
+            suggestion_array.append("Update the device's firmware to the latest stable version.")
+            suggestion_array.append("Monitor for signs of aging, such as increased CPU usage or slower performance.")
+
+        elif input_array[2] > 74:
+            suggestion_array.append("Identify and terminate unnecessary processes or services consuming resources.")
+            suggestion_array.append("Optimize configurations to reduce resource usage (e.g., adjust routing tables, "
+                                    "limit logging).")
+            suggestion_array.append("Upgrade hardware (e.g., add more RAM or replace the CPU) if the device is"
+                                    " consistently overloaded")
+            suggestion_array.append("Distribute workloads across multiple devices to reduce strain on a single "
+                                    "piece of equipment.")
+
+        elif input_array[3] > 5:
+            suggestion_array.append("Investigate the root cause of recurring issues (e.g., software bugs, environmental"
+                                    " factors).")
+            suggestion_array.append("Perform a comprehensive diagnostic test to identify potential hardware or software"
+                                    " faults.")
+            suggestion_array.append("Replace or upgrade the equipment if smaller issues persist and indicate underlying"
+                                    " instability.")
+            suggestion_array.append("Increase monitoring frequency to catch and address issues before they escalate.")
+
+        else:
+            suggestion_array.append("Use network monitoring tools to track metrics like packet loss, CPU/memory usage,"
+                                    " and uptime in real-time.")
+            suggestion_array.append("Configure alerts for critical thresholds to enable quick response to potential "
+                                    "issues.")
+            suggestion_array.append("Ensure all network equipment is running the latest firmware to avoid known bugs or"
+                                    " vulnerabilities.")
+            suggestion_array.append("Design the network with redundancy to minimize the impact of equipment failures.")
+            suggestion_array.append("Schedule regular maintenance to inspect and update equipment.")
+            suggestion_array.append("Analyze historical data to identify patterns and predict future failures.")
+
+        obj = {
+            "suggestions": suggestion_array,
+            "text": "Failure"
+        }
+
     else:
-        return "No Failure"
+        obj = {
+            "suggestions": [],
+            "text": "No Failure"
+        }
+
+    return obj
 
 
 app.run(port=5002, debug=True)

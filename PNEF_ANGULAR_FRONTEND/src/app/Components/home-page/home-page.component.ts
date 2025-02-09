@@ -3,7 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { CommonModule } from '@angular/common';
 import { PredictionService } from '../../Services/prediction.service';
 import { Prediction } from '../../Models/Prediction';
-import { catchError, timeout } from 'rxjs';
+import { catchError, range, timeout } from 'rxjs';
 import { PredictResponse } from '../../Models/PredictResponse';
 import { GeneralResponse } from '../../Models/GeneralResponse';
 
@@ -28,7 +28,9 @@ export class HomePageComponent {
   prediction: Prediction = new Prediction;
   generalResponse: GeneralResponse = new GeneralResponse;
   predictionResult: any = []
+  suggesstionArray: any = []
   resultBox: boolean = false;
+  suggestionBox: boolean = false;
   resultboxColor: string = "alert alert-success";
 
   constructor(private predictionService: PredictionService) {}
@@ -43,6 +45,7 @@ export class HomePageComponent {
     this.issueCountValue = 0;
     this.loadingBox = true;
     this.resultBox = false;
+    this.suggestionBox = false;
 
     setTimeout(() => {
       this.loadingBox = false;
@@ -78,6 +81,7 @@ export class HomePageComponent {
   // Function to send the values to the Machine Learning backend and get the prediction
   getPrediction() {
     this.resultBox = false;
+    this.suggestionBox = false;
     this.loadingBox = true;
     this.prediction = new Prediction
     this.prediction.packets = this.packetValue
@@ -120,10 +124,24 @@ export class HomePageComponent {
           console.log(this.predictionResult)
           if (this.predictionResult[1].text == "Failure") {
             this.resultboxColor = "alert alert-danger"
+
+            // Prepare the data for the suggestion box
+            this.suggesstionArray = this.predictionResult[3].suggestions
+            console.log(this.suggesstionArray)
+
+            // Only make visible the suggestion box if suggestions are available
+            if (this.suggesstionArray.length > 0) {
+              this.suggestionBox = true;
+            }
+            else {
+              this.suggestionBox = true;
+            }
+
           }
           else {
             this.resultboxColor = "alert alert-success"
           }
+
           this.alertStatus = false
           this.loadingBox = false
           this.resultBox = true

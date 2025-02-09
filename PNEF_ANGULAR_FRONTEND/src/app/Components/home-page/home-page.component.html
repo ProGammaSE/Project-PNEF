@@ -55,6 +55,22 @@
               </div>
             </div>
 
+            <div *ngIf="this.suggestionBox">
+              <!-- Display suggestions -->
+              <table class="table table-bordered">
+                <thead>
+                  <tr>
+                    <th scope="col" style="background-color: darkgray;">Suggestions for the failure</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let suggestions of this.suggesstionArray">
+                    <th style="text-align: left;">{{suggestions}}</th>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
             <div style="margin: 2%;">
                 <button type="submit" class="btn btn-primary" (click)="getRandomValues()">
                     Scan
